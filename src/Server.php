@@ -83,9 +83,6 @@ abstract class Server implements ServerInterface
 
         // 设置进程名称
         swoole_set_process_name($this->name . ':reactor');
-
-        // 服务对象初始化
-        $this->initServer();
     }
 
     /**
@@ -247,13 +244,6 @@ abstract class Server implements ServerInterface
     {
         $this->processes[] = $process;
     }
-
-    /**
-     * 服务对象初始化
-     *
-     * @return void
-     */
-    abstract public function initServer();
 
     /**
      * 启动服务

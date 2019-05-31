@@ -12,17 +12,6 @@ use Swoole\Server as SwooleServer;
 abstract class TCP extends Server
 {
     /**
-     * 服务对象初始化
-     *
-     * @return void
-     */
-    public function initServer()
-    {
-        $this->swoole = new SwooleServer($this->host, $this->port);
-        $this->registerCallback();
-    }
-
-    /**
      * 启动服务
      *
      * @param bool $daemonize 是否以守护进程模式运行
@@ -39,6 +28,10 @@ abstract class TCP extends Server
         if ($daemon) {
             $this->option['daemonize'] = true;
         }
+
+        // 服务对象初始化
+        $this->swoole = new SwooleServer($this->host, $this->port);
+        $this->registerCallback();
 
         // 自定义工作进程初始化
         $this->initProcess();

@@ -12,17 +12,6 @@ use Swoole\Http\Server as SwooleHttpServer;
 class HTTP extends Server
 {
     /**
-     * 服务对象初始化
-     *
-     * @return void
-     */
-    public function initServer()
-    {
-        $this->swoole = new SwooleHttpServer($this->host, $this->port);
-        $this->registerCallback();
-    }
-
-    /**
      * 启动服务
      *
      * @param bool $daemonize 是否以守护进程模式运行
@@ -39,6 +28,10 @@ class HTTP extends Server
         if ($daemon) {
             $this->option['daemonize'] = true;
         }
+
+        // 服务对象初始化
+        $this->swoole = new SwooleHttpServer($this->host, $this->port);
+        $this->registerCallback();
 
         // 自定义工作进程初始化
         $this->initProcess();
