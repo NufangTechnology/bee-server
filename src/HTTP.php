@@ -3,6 +3,8 @@
 namespace Bee\Server;
 
 use Swoole\Http\Server as SwooleHttpServer;
+use Swoole\Http\Request;
+use Swoole\Http\Response;
 
 /**
  * HTTP 服务
@@ -50,6 +52,6 @@ class HTTP extends Server
      * @param Request $request
      * @param Response $response
      */
-    abstract public function onRequest(Request $request, Response $response);
+    abstract public function onRequest($request, $response);
 }
 
