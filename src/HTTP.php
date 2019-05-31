@@ -11,7 +11,7 @@ use Swoole\Http\Response;
  *
  * @package Bee\Server
  */
-class HTTP extends Server
+abstract class HTTP extends Server
 {
     /**
      * 启动服务
