@@ -80,9 +80,6 @@ abstract class Server implements ServerInterface
         $this->pidFile = $this->option['pid_file'];
         // 内容输出
         $this->output = new Writer;
-
-        // 设置进程名称
-        swoole_set_process_name($this->name . ':reactor');
     }
 
     /**

@@ -31,6 +31,9 @@ abstract class Websocket extends Server
             $this->option['daemonize'] = true;
         }
 
+        // 设置进程名称
+        swoole_set_process_name($this->name . ':reactor');
+
         // 服务对象初始化
         $this->swoole = new SwooleWebsocketServer($this->host, $this->port);
         $this->registerCallback();
