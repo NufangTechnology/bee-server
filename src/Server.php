@@ -106,6 +106,9 @@ abstract class Server implements ServerInterface
             // $item 为自定义进程基类，限制了子类方法与参数
             // 此处通过匿名函数内部调用，将完整参数注入自定义进程中
             $process = new \swoole_process(function ($process) use ($object) {
+                // 设置进程名称
+                swoole_set_process_name($this->name . ':process');
+                // 执行自定义进程业务
                 $object->handle($this->swoole, $process);
             });
 
