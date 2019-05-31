@@ -11,7 +11,7 @@ use Swoole\WebSocket\Frame;
  *
  * @package Bee\Server
  */
-class Websocket extends Server
+abstract class Websocket extends Server
 {
     /**
      * 服务对象初始化
