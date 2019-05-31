@@ -96,10 +96,23 @@ abstract class Server implements ServerInterface
     protected function initProcess()
     {
         foreach ($this->processes as $class) {
+
+            // 检查类是否有效，防止累不存在导致死循环错误
+            if (!class_exists($class, true)) {
+                throw new Exception('class not exist', 0, $class);
+            }
+
+            // 实例化自定义工作进程
+            // 检查类类型，防止类类型错误导致死循环错误
+            $object  = new $class;
+            if (!$object instanceof Process) {
+                throw new Exception('自定义进程必须继承 \Bee\Server\Process', 0);
+            }
+
             // $item 为自定义进程基类，限制了子类方法与参数
             // 此处通过匿名函数内部调用，将完整参数注入自定义进程中
-            $process = new \swoole_process(function ($process) use ($class) {
-                (new $class)->handle($this->swoole, $process);
+            $process = new \swoole_process(function ($process) use ($object) {
+                $object->handle($this->swoole, $process);
             });
 
             // 挂载进程
