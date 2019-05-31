@@ -1,0 +1,142 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "e4cbabfcba903bc5cec6642c0fe276fb",
+    "packages": [
+        {
+            "name": "adhocore/cli",
+            "version": "0.3.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/adhocore/php-cli.git",
+                "reference": "11a741d4f5a3b05938fc29eb79bcfad2049cb5d5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/adhocore/php-cli/zipball/11a741d4f5a3b05938fc29eb79bcfad2049cb5d5",
+                "reference": "11a741d4f5a3b05938fc29eb79bcfad2049cb5d5",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Ahc\\Cli\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jitendra Adhikari",
+                    "email": "jiten.adhikary@gmail.com"
+                }
+            ],
+            "description": "Command line interface library for PHP",
+            "keywords": [
+                "PHP7",
+                "argument-parser",
+                "argv-parser",
+                "cli",
+                "cli-action",
+                "cli-app",
+                "cli-color",
+                "cli-option",
+                "cli-writer",
+                "command",
+                "console",
+                "console-app",
+                "php-cli",
+                "stream-input",
+                "stream-output"
+            ],
+            "time": "2019-03-09T06:43:34+00:00"
+        },
+        {
+            "name": "bee-framework/util",
+            "version": "v2.1.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/NufangTechnology/bee-util.git",
+                "reference": "79332bfca20f8ac1b1147490f1ce25b13d17dce8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/NufangTechnology/bee-util/zipball/79332bfca20f8ac1b1147490f1ce25b13d17dce8",
+                "reference": "79332bfca20f8ac1b1147490f1ce25b13d17dce8",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Bee\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "description": "Bee框架通用类库",
+            "time": "2019-03-05T09:30:57+00:00"
+        },
+        {
+            "name": "swoole/ide-helper",
+            "version": "4.3.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/swoole/ide-helper.git",
+                "reference": "7035aeb5c6d42c22b44aef1304aac62d6733b5e5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/swoole/ide-helper/zipball/7035aeb5c6d42c22b44aef1304aac62d6733b5e5",
+                "reference": "7035aeb5c6d42c22b44aef1304aac62d6733b5e5",
+                "shasum": ""
+            },
+            "require-dev": {
+                "squizlabs/php_codesniffer": "~3.4.0",
+                "zendframework/zend-code": "~3.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Swoole\\IDEHelper\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Team Swoole",
+                    "email": "team@swoole.com"
+                }
+            ],
+            "description": "IDE help files for Swoole.",
+            "time": "2019-05-22T19:49:35+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=7.2",
+        "ext-pcntl": "*",
+        "ext-swoole": ">=4.2"
+    },
+    "platform-dev": []
+}

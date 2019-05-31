@@ -1,0 +1,23 @@
+{
+    "name": "bee-framework/server",
+    "description": "Bee框架Server组件",
+    "type": "library",
+    "require": {
+        "php": ">=7.2",
+        "ext-pcntl": "*",
+        "ext-swoole": ">=4.2",
+        "bee-framework/util": "^2.1",
+        "swoole/ide-helper": "^4.3",
+        "adhocore/cli": "^0.3.3"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "铁岭王力宏",
+            "email": "anoxia@engineer.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {"Bee\\Server\\": "src"}
+    }
+}
