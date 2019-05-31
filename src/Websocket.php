@@ -67,5 +67,15 @@ abstract class Websocket extends Server
      * @param Frame $frame
      */
     abstract public function onMessage($server, $frame);
+
+    /**
+     * 连接关闭
+     *
+     * @param SwooleWebsocketServer $server
+     * @param int $fd
+     * @param int $reatorId
+     * @return void
+     */
+    abstract public function onClose($server, $fd, $reatorId);
 }
 
