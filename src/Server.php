@@ -86,8 +86,6 @@ abstract class Server implements ServerInterface
 
         // 服务对象初始化
         $this->initServer();
-        // 自定义工作进程初始化
-        $this->initProcess();
     }
 
     /**

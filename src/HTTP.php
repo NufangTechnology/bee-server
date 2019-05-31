@@ -40,6 +40,9 @@ class HTTP extends Server
             $this->option['daemonize'] = true;
         }
 
+        // 自定义工作进程初始化
+        $this->initProcess();
+
         // 启动 HTTP 服务
         $this->swoole->set($this->option);
         $this->swoole->start();
