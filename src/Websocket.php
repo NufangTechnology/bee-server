@@ -66,6 +66,6 @@ abstract class Websocket extends Server
      * @param SwooleWebsocketServer $server
      * @param Frame $frame
      */
-    abstract public function onMessage($server, Frame $frame);
+    abstract public function onMessage($server, $frame);
 }
 
