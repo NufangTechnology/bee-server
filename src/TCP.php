@@ -7,17 +7,6 @@ use Swoole\Server as SwooleServer;
 /**
  * TCP 服务
  *
- * 启动服务：
- *  <?php
- *  class TcpDEMO extends \Bee\Server\TCP
- *  {
- *      public function onConnect($server) {}
- *  }
- *
- *  $server = new TcpDEMO;
- *  #server->start();
- *  ?>
- *
  * @package Bee\Server
  */
 abstract class TCP extends Server
