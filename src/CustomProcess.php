@@ -3,6 +3,7 @@
 namespace Bee\Server;
 
 use Swoole\Process as SwooleProcess;
+use swoole_process;
 
 /**
  * 自定义工作进程
@@ -21,7 +22,7 @@ class CustomProcess
     protected $instance;
 
     /**
-     * @param \Swoole\Server|\Swoole\HTTP\Server|\Swoole\WebSocket\Serve $server
+     * @param \Swoole\Server|\Swoole\HTTP\Server|\Swoole\WebSocket\Server $server
      * @param string $class
      */
     public function __construct($server, string $class)
@@ -39,7 +40,7 @@ class CustomProcess
     }
 
     /**
-     * @return \swoole_process
+     * @return swoole_process
      */
     public function getInstance()
     {

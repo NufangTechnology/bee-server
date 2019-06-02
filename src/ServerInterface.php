@@ -2,6 +2,8 @@
 
 namespace Bee\Server;
 
+use Swoole\Server\Task;
+
 interface ServerInterface
 {
 
@@ -100,9 +102,9 @@ interface ServerInterface
      * task异步回调处理任务时回调此方法
      *
      * @param Server $server
-     * @param Task $task
+     * @param \Swoole\Server\Task $task
      */
-    public function onTask($server, Task $task);
+    public function onTask($server, $task);
 
     /**
      * worker进程都低的任务完成后回调此方法

@@ -2,7 +2,7 @@
 
 namespace Bee\Server;
 
-use Swoole\WebSocket\Server as SwooleWebsocketServer;
+use Swoole\WebSocket\Server as SwooleServer;
 use Swoole\Http\Request;
 use Swoole\WebSocket\Frame;
 

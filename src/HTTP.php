@@ -2,7 +2,7 @@
 
 namespace Bee\Server;
 
-use Swoole\Http\Server as SwooleHttpServer;
+use Swoole\Http\Server as SwooleServer;
 use Swoole\Http\Request;
 use Swoole\Http\Response;
 
@@ -20,7 +20,7 @@ abstract class HTTP extends Server
      */
     public function createServer()
     {
-        return new SwooleHttpServer($this->host, $this->port);
+        return new SwooleServer($this->host, $this->port);
     }
 
     /**

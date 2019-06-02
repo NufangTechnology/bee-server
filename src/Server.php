@@ -98,7 +98,7 @@ abstract class Server implements ServerInterface
     /**
      * 获取服务所在端口号
      *
-     * @return string
+     * @return int
      */
     public function getPort(): int
     {
@@ -184,11 +184,12 @@ abstract class Server implements ServerInterface
      */
     protected function initProcess() {}
 
-    /**
-     * 加载自定义工作进程
-     *
-     * @return bool
-     */
+	/**
+	 * 加载自定义工作进程
+	 *
+	 * @return bool
+	 * @throws Exception
+	 */
     protected function registerProcess()
     {
         foreach ($this->processes as $process) {
@@ -205,16 +206,17 @@ abstract class Server implements ServerInterface
     /**
      * 初始化服务Server
      *
-     * @return \Swoole\Server|\Swoole\HTTP\Server|\Swoole\WebSocket\Server
+     * @return SwooleServer|\Swoole\HTTP\Server|\Swoole\WebSocket\Server
      */
     abstract public function createServer();
 
-    /**
-     * 启动服务
-     *
-     * @param bool $daemon
-     * @return void
-     */
+	/**
+	 * 启动服务
+	 *
+	 * @param bool $daemon
+	 * @return void
+	 * @throws Exception
+	 */
     public function start($daemon = true)
     {
         if ($this->isRunning()) {
@@ -304,6 +306,7 @@ abstract class Server implements ServerInterface
     /**
      * 强制退出主进程及子进程
      *
+     * @return bool
      * @throws Exception
      */
     public function shutdown()
@@ -327,6 +330,8 @@ abstract class Server implements ServerInterface
                 break;
             }
         }
+
+        return true;
     }
 
     /**
@@ -394,7 +399,7 @@ abstract class Server implements ServerInterface
 
     public function onWorkerError($server, $workerId, $workerPid, $exitCode, $signal) {}
 
-    public function onTask($server, Task $task) {}
+    public function onTask($server, SwooleServer\Task $task) {}
 
     public function onFinish($server, $taskId, $data) {}
 
