@@ -47,7 +47,7 @@ abstract class Server implements ServerInterface
     /** @var Writer */
     protected $output;
 
-    /** @var array */
+    /** @var CustomProcess[] */
     protected $processes = [];
 
     /**
@@ -80,46 +80,9 @@ abstract class Server implements ServerInterface
         $this->pidFile = $this->option['pid_file'];
         // 内容输出
         $this->output = new Writer;
-    }
 
-    /**
-     * 自定义工作进程初始化
-     *
-     * @return bool
-     */
-    protected function initProcess()
-    {
-        foreach ($this->processes as $class) {
-
-            // 检查类是否有效，防止累不存在导致死循环错误
-            if (!class_exists($class, true)) {
-                throw new Exception('class not exist', 0, $class);
-            }
-
-            // 实例化自定义工作进程
-            // 检查类类型，防止类类型错误导致死循环错误
-            $object  = new $class;
-            if (!$object instanceof Process) {
-                throw new Exception('自定义进程必须继承 \Bee\Server\Process', 0);
-            }
-
-            // $item 为自定义进程基类，限制了子类方法与参数
-            // 此处通过匿名函数内部调用，将完整参数注入自定义进程中
-            $process = new \swoole_process(function ($process) use ($object) {
-                // 设置进程名称
-                swoole_set_process_name($this->name . ':process');
-                // 执行自定义进程业务
-                $object->handle($this->swoole, $process);
-            });
-
-            // 挂载进程
-            $result  = $this->swoole->addProcess($process);
-            if ($result === false) {
-                throw new Exception('自定义工作进程添加失败', 0, $class);
-            }
-        }
-
-        return true;
+        // 初始化/注册自定义工作进程
+        $this->initProcess();
     }
 
     /**
@@ -153,6 +116,26 @@ abstract class Server implements ServerInterface
     }
 
     /**
+     * 获取去当前进程ID
+     *
+     * @return int
+     */
+    public function getPid() : int
+    {
+        if (!$this->isRunning()) {
+            return 0;
+        }
+
+        if (!empty($this->pid)) {
+            return $this->pid;
+        }
+
+        $pid = @file_get_contents($this->pidFile);
+
+        return intval($pid);
+    }
+
+    /**
      * 检查服务是否处于运行中
      *
      * @return bool
@@ -181,7 +164,7 @@ abstract class Server implements ServerInterface
      *
      * @return $this
      */
-    protected function registerCallback()
+    protected function registerEvent()
     {
         $handles = get_class_methods($this);
 
@@ -195,87 +178,70 @@ abstract class Server implements ServerInterface
     }
 
     /**
-     * 获取去当前进程ID
+     * 自定义工作进程初始化
      *
-     * @return int
+     * @return void
      */
-    public function pid() : int
-    {
-        if (!$this->isRunning()) {
-            return 0;
-        }
-
-        if (!empty($this->pid)) {
-            return $this->pid;
-        }
-
-        $pid = @file_get_contents($this->pidFile);
-
-        return intval($pid);
-    }
+    protected function initProcess() {}
 
     /**
-     * 删除进程pid文件
+     * 加载自定义工作进程
      *
-     * @throws Exception
+     * @return bool
      */
-    private function deletePidFile()
+    protected function registerProcess()
     {
-        if (!is_file($this->pidFile)) {
-            return false;
-        }
-
-        @unlink($this->pidFile);
-
-        if (is_file($this->pidFile)) {
-            throw new Exception('进程pid文件删除失败');
+        foreach ($this->processes as $process) {
+            $result = $this->swoole->addProcess($process->getInstance());
+            // 进程挂载失败，中止 Server 启动
+            if ($result === false) {
+                throw new Exception('自定义工作进程添加失败', 0, $process->getClass());
+            }
         }
 
         return true;
     }
 
     /**
-     * 新增工作进程
+     * 初始化服务Server
      *
-     * @param SwooleProcess $process
-     * @return void
+     * @return \Swoole\Server|\Swoole\HTTP\Server|\Swoole\WebSocket\Server
      */
-    public function addProcess($process)
-    {
-        $this->processes[] = $process;
-    }
+    abstract public function createServer();
 
     /**
      * 启动服务
      *
+     * @param bool $daemon
      * @return void
      */
-    abstract public function start($daemon = true);
-
-    /**
-     * 获取服务进程状态
-     */
-    public function status()
+    public function start($daemon = true)
     {
-        if (!$this->isRunning()) {
-            $this->output->warn('没有运行中的服务', true);
+        if ($this->isRunning()) {
+            $this->output->warn("无效操作，服务已经在[{$this->host}:{$this->port}]运行！");
             return;
         }
 
-        $pid = $this->pid();
+        // 以守护模式运行
+        if ($daemon) {
+            $this->option['daemonize'] = true;
+        }
 
-        // FIXME 重写进程数据提取方式，保证提取正确数据
-        // // 根据主进程ID获取相关进程（子进程）运行信息
-        // exec("ps -A -o user,pid,ppid,pmem,pcpu,stat,comm,cmd | grep -E '{$pid}|%MEM|{$this->name}'", $result);
-        // // 删除最后两行（shell指令自身）
-        // array_pop($result);
-        // array_pop($result);
-        // // 提取并输出菜单栏
-        // $this->output->ok(array_shift($result), true);
-        // // 输出进程状态明细
-        // foreach ($result as $line) {
-            // $this->output->write($line, true);
-        // }
+        // 设置进程名称
+        swoole_set_process_name($this->name . ':reactor');
+
+        // 服务对象初始化
+        $this->swoole = $this->createServer();
+        $this->registerEvent();
+
+        // 自定义工作进程初始化
+        $this->initProcess();
+        // 加载自定义工作进程
+        $this->registerProcess();
+
+        // 启动 HTTP 服务
+        $this->swoole->set($this->option);
+        $this->swoole->start();
     }
 
     /**
@@ -287,7 +253,7 @@ abstract class Server implements ServerInterface
     public function reload()
     {
         if ($this->isRunning()) {
-            SwooleProcess::kill($this->pid(), SIGUSR1);
+            SwooleProcess::kill($this->getPid(), SIGUSR1);
         } else {
             $this->output->warn('未找到运行中的服务', true);
         }
@@ -324,7 +290,7 @@ abstract class Server implements ServerInterface
         }
 
         // 发送服务关闭信号
-        SwooleProcess::kill($this->pid(), SIGTERM);
+        SwooleProcess::kill($this->getPid(), SIGTERM);
 
         // 等待全部进程退出
         // 软关闭过程主进程会等待子进程全部退出后最后退出
@@ -346,12 +312,47 @@ abstract class Server implements ServerInterface
         exec("ps -ef | grep {$this->name} | grep -vE 'grep|watcher' | cut -c 9-15 | xargs kill -s 9");
 
         while (true) {
+            // 删除进程pid文件
             if ($this->isRunning() == false) {
-                // 删除进程pid文件
-                $this->deletePidFile();
+                if (!is_file($this->pidFile)) {
+                    return false;
+                }
+
+                unlink($this->pidFile);
+
+                if (is_file($this->pidFile)) {
+                    throw new Exception('进程pid文件删除失败');
+                }
+
                 break;
             }
         }
+    }
+
+    /**
+     * 获取服务进程状态
+     */
+    public function status()
+    {
+        if (!$this->isRunning()) {
+            $this->output->warn('没有运行中的服务', true);
+            return;
+        }
+
+        $pid = $this->getPid();
+
+        // FIXME 重写进程数据提取方式，保证提取正确数据
+		// 根据主进程ID获取相关进程（子进程）运行信息
+		exec("ps -A -o user,pid,ppid,pmem,pcpu,stat,comm,cmd | grep -E '{$pid}|%MEM|{$this->name}'", $result);
+		// 删除最后两行（shell指令自身）
+		array_pop($result);
+		array_pop($result);
+		// 提取并输出菜单栏
+		$this->output->ok(array_shift($result), true);
+		// 输出进程状态明细
+		foreach ($result as $line) {
+			$this->output->write($line, true);
+		}
     }
 
     /**

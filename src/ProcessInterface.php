@@ -10,7 +10,7 @@ use Swoole\Process as SwooleProcess;
  *
  * @package Bee\Server
  */
-abstract class Process
+interface ProcessInterface
 {
     /**
      * 执行自定义业务
