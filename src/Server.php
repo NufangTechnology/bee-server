@@ -399,7 +399,7 @@ abstract class Server implements ServerInterface
 
     public function onWorkerError($server, $workerId, $workerPid, $exitCode, $signal) {}
 
-    public function onTask($server, SwooleServer\Task $task) {}
+    public function onTask($server, $task) {}
 
     public function onFinish($server, $taskId, $data) {}
 
