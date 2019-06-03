@@ -2,7 +2,6 @@
 
 namespace Bee\Server;
 
-use Swoole\Server as SwooleServer;
 use Swoole\Process as SwooleProcess;
 
 /**
@@ -15,9 +14,8 @@ interface ProcessInterface
     /**
      * 执行自定义业务
      *
-     * @param SwooleServer $server
      * @param SwooleProcess $process
      * @return mixed
      */
-    public function handle($server, $process);
+    public function handle($process);
 }
