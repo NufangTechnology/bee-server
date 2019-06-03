@@ -22,7 +22,7 @@ class CustomProcess
      * @param \Swoole\Server|\Swoole\HTTP\Server|\Swoole\WebSocket\Server $server
      * @param string $class
      */
-    public function __construct(string $class)
+    public function __construct($server, string $class)
     {
         // 提前初始化，防止进程内部初始化出错导致进程死循环
         /** @var ProcessInterface $worker */
@@ -33,8 +33,8 @@ class CustomProcess
         }
 
         // 创建工作进程
-        $process = new SwooleProcess(function (SwooleProcess $process) use ($worker) {
-            $worker->handle($process);
+        $process = new SwooleProcess(function (SwooleProcess $process) use ($server, $worker) {
+            $worker->handle($server, $process);
         });
 
         $this->class    = $class;

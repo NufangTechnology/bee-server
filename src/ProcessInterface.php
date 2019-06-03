@@ -17,5 +17,5 @@ interface ProcessInterface
      * @param SwooleProcess $process
      * @return mixed
      */
-    public function handle($process);
+    public function handle($server, $process);
 }
