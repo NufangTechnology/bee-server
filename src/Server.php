@@ -82,7 +82,7 @@ abstract class Server implements ServerInterface
         $this->output = new Writer;
 
         // 初始化/注册自定义工作进程
-        $this->initProcess();
+        $this->init();
     }
 
     /**
@@ -182,7 +182,7 @@ abstract class Server implements ServerInterface
      *
      * @return void
      */
-    protected function initProcess() {}
+    protected function init() {}
 
 	/**
 	 * 加载自定义工作进程
