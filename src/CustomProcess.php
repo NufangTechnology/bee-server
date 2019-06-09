@@ -35,7 +35,7 @@ class CustomProcess
         // 创建工作进程
         $process = new SwooleProcess(function (SwooleProcess $process) use ($server, $worker) {
             $worker->handle($server, $process);
-        });
+        }, true, SOCK_DGRAM);
 
         $this->class    = $class;
         $this->instance = $process;
