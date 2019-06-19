@@ -80,9 +80,6 @@ abstract class Server implements ServerInterface
         $this->pidFile = $this->option['pid_file'];
         // 内容输出
         $this->output = new Writer;
-
-        // 初始化/注册自定义工作进程
-        $this->init();
     }
 
     /**
@@ -236,8 +233,8 @@ abstract class Server implements ServerInterface
         $this->swoole = $this->createServer();
         $this->registerEvent();
 
-        // 自定义工作进程初始化
-        $this->initProcess();
+        // 自定义初始化
+        $this->init();
         // 加载自定义工作进程
         $this->registerProcess();
 
